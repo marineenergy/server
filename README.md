@@ -263,7 +263,8 @@ cd ~/iea-server
 
 # set environment variables
 echo "PASSWORD=S3cr!tpw" > .env
-echo "HOST=iea-demo.us" >> .env
+# actual password on Ben's laptop: ~/private/password_mhk-env.us_server-software
+echo 'HOST=mhk-env.us' >> .env
 cat .env
 
 # launch
