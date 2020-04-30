@@ -259,7 +259,7 @@ First, you will create the environment `.env` file to specify password and host:
 ```bash
 # get latest docker-compose files
 git clone https://github.com/mhk-env/mhk-env_server-software.git
-cd ~/iea-server
+cd ~/mhk-env_server-software
 
 # set environment variables
 echo "PASSWORD=S3cr!tpw" > .env
@@ -299,6 +299,18 @@ docker-compose restart
 # OR stop
 docker-compose stop
 ```
+
+## mhk-env.us manual post-docker install steps
+
+TODO: fold into `docker-compose.yml`
+
+Log into rstudio.mhk-env.us and use the Terminal to:
+
+- 
+
+```
+
+
 
 ### rstudio-shiny
 

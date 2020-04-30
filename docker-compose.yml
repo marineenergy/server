@@ -1,6 +1,7 @@
 version: '3.3'
 
 volumes:
+  share:
   postgis-data:
   postgis-backups:
   geoserver-data:
@@ -38,6 +39,7 @@ services:
       POSTGRES_PASSWORD: $PASSWORD
     volumes:
       - postgis-data:/var/lib/postgresql
+      - share:/share
     restart: unless-stopped
     healthcheck:
       test: 'exit 0'
@@ -70,6 +72,7 @@ services:
       GEOSERVER_ADMIN_PASSWORD: $PASSWORD
     volumes:
       - geoserver-data:/opt/geoserver/data_dir
+      - share:/share      
     ports:
       - 8888:8080
     restart: unless-stopped
@@ -85,7 +88,8 @@ services:
     container_name: rstudio-shiny
     build: ./rstudio-shiny
     image: bdbest/rstudio-shiny:s4w
-    #volumes:
+    volumes:
+      - share:/share    
     #  - shiny-apps:/srv/shiny-server
     restart: unless-stopped
     environment:
@@ -101,7 +105,8 @@ services:
   nginx:
     container_name: nginx
     build: ./nginx
-    #volumes:
+    volumes:
+      - share:/share    
     # - nginx-html:/usr/share/nginx/html
     restart: unless-stopped
     environment:
