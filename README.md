@@ -304,11 +304,31 @@ docker-compose stop
 
 TODO: fold into `docker-compose.yml`
 
-Log into rstudio.mhk-env.us and use the Terminal to:
+Log into rstudio.mhk-env.us as admin and use the Terminal to:
 
-- 
+```bash
+sudo chown -R 777 /share
+cd /share; mkdir github; cd github
+git clone https://github.com/mhk-env/mhk-env.github.io.git
+git clone https://github.com/mhk-env/mhk-env_shiny-apps.git
+```
+
+On Terminal for docker server with bbest@mhk-data-ubuntu: 
+
+```bash
+docker exec -it nginx bash
+```
+
+shiny-logs?
 
 ```
+cd /usr/share/nginx
+mv html html_0
+ln -s /share/github/mhk-env.github.io html
+
+
+/srv/shiny-server
+
 
 
 
