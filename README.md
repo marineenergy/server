@@ -9,7 +9,7 @@ Uses: https://github.com/ekalinin/github-markdown-toc
 
 * [Server software](#server-software)
 * [Shell into server](#shell-into-server)
-* [Create Server on DigitalOcean](#create-server)
+* [Create Server on DigitalOcean](#create-server-on-digitalocean)
 * [Install Docker](#install-docker)
    * [docker](#docker)
    * [docker-compose](#docker-compose)
@@ -17,12 +17,17 @@ Uses: https://github.com/ekalinin/github-markdown-toc
    * [Test webserver](#test-webserver)
 * [Setup domain iea-ne.us](#setup-domain-iea-neus)
 * [Run docker-compose](#run-docker-compose)
+* [mhk-env.us manual post-docker install steps](#mhk-envus-manual-post-docker-install-steps)
    * [rstudio-shiny](#rstudio-shiny)
 * [Docker maintenance](#docker-maintenance)
    * [Push docker image](#push-docker-image)
    * [Develop on local host](#develop-on-local-host)
    * [Operate on all docker containers](#operate-on-all-docker-containers)
    * [Inspect docker logs](#inspect-docker-logs)
+* [migrate /share to 500 GB volume](#migrate-share-to-500-gb-volume)
+   * [check drives](#check-drives)
+   * [make space](#make-space)
+   * [mount](#mount)
 * [TODO](#todo)
 
 ## Server software
@@ -319,19 +324,6 @@ On Terminal for docker server with bbest@mhk-data-ubuntu:
 docker exec -it nginx bash
 ```
 
-shiny-logs?
-
-```
-cd /usr/share/nginx
-mv html html_0
-ln -s /share/github/mhk-env.github.io html
-
-
-/srv/shiny-server
-
-
-
-
 ### rstudio-shiny
 
 Haven't figured out how to RUN these commands after user admin is created in rstudio-shiny container.
@@ -342,20 +334,13 @@ Haven't figured out how to RUN these commands after user admin is created in rst
 
     ```bash
     sudo su -
-    ln -s /srv/shiny-server /home/admin/shiny-apps
+    ln -s /share /home/admin/share
+    ln -s /share/data /home/admin/data
+    ln -s /share/github /home/admin/github
+    ln -s /share/github/mhk-env.github.io /home/admin/www
+    ln -s /share/github/mhk-env_shiny-apps /home/admin/shiny-apps
     ln -s /var/log/shiny-server /home/admin/shiny-logs
-    mkdir /srv/github
-    ln -s /srv/github /home/admin/github
-    
-    cd /srv/github
-    git clone https://github.com/marinebon/iea-ne_info.git
-    git clone https://github.com/marinebon/iea-uploader.git
-    
-    chown -R admin /srv/shiny-server
-    chown -R admin /srv/github
-    
-    ln -s /usr/share/nginx/html /home/admin/info-html
-    chown -R admin /home/admin/info-html
+
     ```
 
 ## Docker maintenance
@@ -521,120 +506,39 @@ sudo docker cp rstudio-shiny:/share/. /share
 # stop all docker containers
 docker stop $(docker ps -q)
 
-
-```
-
-
-
-Had to delete wierd "loop" partition first, per [partitioning - too many primary partitions - Ubuntu - Ask Ubuntu](https://askubuntu.com/questions/932430/too-many-primary-partitions-ubuntu).
-
-```
-bbest@mhk-data-ubuntu:~$ sudo parted
-(parted) select /dev/sda
-Using /dev/sda
-(parted) print                                                            
-Model: DO Volume (scsi)
-Disk /dev/sda: 537GB
-Sector size (logical/physical): 512B/512B
-Partition Table: loop
-Disk Flags: 
-
-Number  Start  End    Size   File system  Flags
- 1      0.00B  537GB  537GB  ext4
-
-(parted) rm 1                                                             
-Warning: Partition /dev/sda is being used. Are you sure you want to continue?
-Yes/No? Yes            
-```
-
-Per [How to Create Partitions on DigitalOcean Block Storage Volumes :: DigitalOcean Product Documentation](https://www.digitalocean.com/docs/volumes/how-to/partition/):
-
-```bash
-sudo parted /dev/sda
-```
-
-```
-GNU Parted 3.2
-Using /dev/sda
-Welcome to GNU Parted! Type 'help' to view a list of commands.
-(parted)                                                                  
-(parted) print                                                            
-Model: DO Volume (scsi)
-Disk /dev/sda: 537GB
-Sector size (logical/physical): 512B/512B
-Partition Table: loop
-Disk Flags: 
-
-Number  Start  End    Size   File system  Flags
- 1      0.00B  537GB  537GB  ext4
-
-(parted) mkpart                                                           
-File system type?  [ext2]?                                                
-Start? 0%                                                                 
-End? 100%  
-
-sudo parted -s /dev/sda mkpart 0% 100%
-```
-
-```bash
-sudo mkdir /share
-sudo mount /dev/sda# /share
-```
-
-To mount the drive, enter:
-$ sudo mount /dev/sdb1 /media/newhd
-
-sudo mount -o defaults,nofail,discard,noatime /dev/disk/by-id/scsi-example /mnt/example_mount_point
-
-
-sudo vi /etc/fstab
-
-
-
-## shiny app shuffle
-
-in rstudio.iea-demo.us terminal:
-
-```
-cd /srv
-mkdir -p github/iea-ne_apps
-cd /srv/shiny-server/
-mv * ../github/iea-ne_apps/.
-mv .git ../github/iea-ne_apps/.
-mv .gitignore ../github/iea-ne_apps/.
-ln -s /srv/github/iea-ne_apps/test /srv/shiny-server/test
-cd ../github
-
-ln -s /srv/github/iea-uploader /srv/shiny-server/uploader
-```
-
-
-## erddap quick fix
-
-```bash
+# rebuild docker
+cd ~/mhk-env_server-software
 git pull
+docker-compose up --build -d
 
-nc_local=./erddap/data/iea-ne/ex-chl-ppd/M_201901-MODISA-NESGRID-CHLOR_A.nc
-nc_docker=erddap:/erddapData/iea-ne/ex-chl-ppd/M_201901-MODISA-NESGRID-CHLOR_A.nc
-docker exec erddap bash -c "mkdir -p /erddapData/iea-ne/ex-chl-ppd"
-docker exec erddap bash -c "mkdir -p /usr/local/tomcat/conf/Catalina/localhost"
-docker cp $nc_local $nc_docker
-
-docker exec -it erddap bash -c "cd /usr/local/tomcat/webapps/erddap/WEB-INF && bash GenerateDatasetsXml.sh -verbose"
+# drop old unused docker volume /share
+docker volume prune
 ```
-Doh! Still Bad Gateway at http://erddap.iea-demo.us/
 
 ```
-Parameters for loading M_201901-MODISA-NESGRID-CHLOR_A.nc using:
-GenerateDatasetsXml.sh -verbose
+Are you sure you want to continue? [y/N] y
+Deleted Volumes:
+mhkenvserversoftware_share
 
-- Which EDDType: EDDGridFromNcFiles
-- Parent directory: /erddapData/iea-ne/ex-chl-ppd
-- File name regex: .*\.*nc
-- Full file name of one file: /erddapData/iea-ne/ex-chl-ppd/M_201901-MODISA-NESGRID-CHLOR_A.nc
-- ReloadEveryNMinutes: 10
-- cacheFromUrl:
-^D
+Total reclaimed space: 104.4GB
+```
+
+Per [Setting Up Persistent Mounting - How to Mount Volumes | DigitalOcean](https://www.digitalocean.com/docs/volumes/how-to/mount/#persistent):
+
+
+```bash
+sudo vi /etc/fstab
+```
+
+```
+LABEL=cloudimg-rootfs   /        ext4   defaults        0 0
+LABEL=UEFI      /boot/efi       vfat    defaults        0 0
+/dev/sda /share ext4 defaults,nofail,discard,noatime 0 2
+```
+
+```bash
+# check that /etc/fstab is parsable and usable
+findmnt --verify --verbose
 ```
 
 ## TODO
