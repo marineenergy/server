@@ -1,7 +1,13 @@
 version: '3.3'
 
 volumes:
+  #share:
   share:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /share
   postgis-data:
   postgis-backups:
   geoserver-data:

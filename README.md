@@ -427,6 +427,170 @@ docker-compose logs -f
 docker inspect rstudio-shiny
 ```
 
+## migrate `/share` to 500 GB volume
+
+### check drives
+
+See drives numbers or id by:
+
+```bash
+sudo fdisk -l
+```
+
+```
+Disk /dev/vda: 160 GiB, 171798691840 bytes, 335544320 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 02CBFCD2-7495-4A08-A11B-28E7D3872FAA
+
+Device      Start       End   Sectors   Size Type
+/dev/vda1  227328 335544286 335316959 159.9G Linux filesystem
+/dev/vda14   2048     10239      8192     4M BIOS boot
+/dev/vda15  10240    227327    217088   106M Microsoft basic data
+
+Partition table entries are not in disk order.
+
+
+Disk /dev/sda: 500 GiB, 536870912000 bytes, 1048576000 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+```
+
+```bash
+lsblk
+```
+
+```
+NAME    MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda       8:0    0   500G  0 disk /run/media/system/Volume
+vda     252:0    0   160G  0 disk 
+├─vda1  252:1    0 159.9G  0 part /
+├─vda14 252:14   0     4M  0 part 
+└─vda15 252:15   0   106M  0 part /boot/efi
+```
+
+### make space 
+
+Since disk is full with Docker volume /share, in rstudio.mhk-env.us Terminal:
+
+```bash
+du -a /share/data/marinecadastre.gov | sort -n -r | head -n 5
+```
+
+```
+145854040       /share/data/marinecadastre.gov
+11557992        /share/data/marinecadastre.gov/AIS Vessel Tracks 2011
+8586948 /share/data/marinecadastre.gov/AIS Vessel Tracks 2015
+8581012 /share/data/marinecadastre.gov/AIS Vessel Tracks 2016
+8516688 /share/data/marinecadastre.gov/AIS Vessel Tracks 2013
+```
+
+```bash
+rm -rf /share/data/marinecadastre.gov/AIS\ Vessel\ Tracks\ 201*
+df -H
+```
+
+Now in SSH terminal, we see enough space:
+
+```
+Filesystem      Size  Used Avail Use% Mounted on
+udev            4.2G     0  4.2G   0% /dev
+tmpfs           837M  824k  836M   1% /run
+/dev/vda1       167G  122G   46G  73% /
+tmpfs           4.2G     0  4.2G   0% /dev/shm
+tmpfs           5.3M     0  5.3M   0% /run/lock
+tmpfs           4.2G     0  4.2G   0% /sys/fs/cgroup
+/dev/vda15      110M  3.8M  106M   4% /boot/efi
+/dev/sda        533G   76M  506G   1% /mnt/volume_sfo2_01
+tmpfs           837M     0  837M   0% /run/user/1000
+```
+
+### mount
+
+
+```bash
+# mount volume
+sudo mount /dev/sda /share
+
+# copy from docker volume /share to host /share
+sudo docker cp rstudio-shiny:/share/. /share
+
+# stop all docker containers
+docker stop $(docker ps -q)
+
+
+```
+
+
+
+Had to delete wierd "loop" partition first, per [partitioning - too many primary partitions - Ubuntu - Ask Ubuntu](https://askubuntu.com/questions/932430/too-many-primary-partitions-ubuntu).
+
+```
+bbest@mhk-data-ubuntu:~$ sudo parted
+(parted) select /dev/sda
+Using /dev/sda
+(parted) print                                                            
+Model: DO Volume (scsi)
+Disk /dev/sda: 537GB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+Disk Flags: 
+
+Number  Start  End    Size   File system  Flags
+ 1      0.00B  537GB  537GB  ext4
+
+(parted) rm 1                                                             
+Warning: Partition /dev/sda is being used. Are you sure you want to continue?
+Yes/No? Yes            
+```
+
+Per [How to Create Partitions on DigitalOcean Block Storage Volumes :: DigitalOcean Product Documentation](https://www.digitalocean.com/docs/volumes/how-to/partition/):
+
+```bash
+sudo parted /dev/sda
+```
+
+```
+GNU Parted 3.2
+Using /dev/sda
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+(parted)                                                                  
+(parted) print                                                            
+Model: DO Volume (scsi)
+Disk /dev/sda: 537GB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+Disk Flags: 
+
+Number  Start  End    Size   File system  Flags
+ 1      0.00B  537GB  537GB  ext4
+
+(parted) mkpart                                                           
+File system type?  [ext2]?                                                
+Start? 0%                                                                 
+End? 100%  
+
+sudo parted -s /dev/sda mkpart 0% 100%
+```
+
+```bash
+sudo mkdir /share
+sudo mount /dev/sda# /share
+```
+
+To mount the drive, enter:
+$ sudo mount /dev/sdb1 /media/newhd
+
+sudo mount -o defaults,nofail,discard,noatime /dev/disk/by-id/scsi-example /mnt/example_mount_point
+
+
+sudo vi /etc/fstab
+
+
+
 ## shiny app shuffle
 
 in rstudio.iea-demo.us terminal:
