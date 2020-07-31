@@ -1,6 +1,7 @@
 FROM nginx:stable
 
-# install website from Github
+# link website from shared github repo
 RUN apt-get update; apt-get --assume-yes install git
-RUN cd /usr/share/nginx && rm -rf html && \
-    git clone https://github.com/mhk-env/mhk-env.github.io.git html
+RUN cd /usr/share/nginx && \
+    rm -rf html && \
+    ln -s /share/github/mhk-env.github.io html

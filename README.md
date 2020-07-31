@@ -541,6 +541,14 @@ LABEL=UEFI      /boot/efi       vfat    defaults        0 0
 findmnt --verify --verbose
 ```
 
+## SFTP
+
+[Download Cyberduck](https://cyberduck.io/download/)
+
+
+server: mhk-env.us
+
+
 ## TODO
 
 Web content:
