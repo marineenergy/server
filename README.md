@@ -549,6 +549,46 @@ findmnt --verify --verbose
 server: mhk-env.us
 
 
+## Add user(s)
+
+```bash
+user=cgrant
+pass=secr3t
+
+# add user to host
+sudo adduser $user
+sudo usermod -aG sudo $user
+
+# add user inside rstudio-shiny docker container from host
+docker exec rstudio-shiny adduser $user --gecos 'First Last,RoomNumber,WorkPhone,HomePhone' --disabled-password
+docker exec rstudio-shiny sh -c "echo $user:$pass | sudo chpasswd"
+
+# check in container
+docker exec -it rstudio-shiny bash
+cat /etc/passwd
+exit
+
+# setup symbolic links in home dir
+sudo su -
+
+user=cgrant
+#user=nswanson
+ln -s /share /home/$user/share
+ln -s /share/data /home/$user/data
+ln -s /share/github /home/$user/github
+ln -s /share/github/mhk-env.github.io /home/$user/www
+ln -s /share/github/mhk-env_shiny-apps /home/$user/shiny-apps
+ln -s /var/log/shiny-server /home/$user/shiny-logs
+exit
+
+# add to group shared by admin
+sudo usermod –a –G staff $user
+sudo usermod -aG staff $user
+```
+
+
+
+
 ## TODO
 
 Web content:
