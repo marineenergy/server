@@ -552,8 +552,24 @@ server: mhk-env.us
 ## Add user(s)
 
 ```bash
+# setup (once) staff to be shared by admin, and default permissions 775
+docker exec rstudio-shiny gpasswd -a admin staff
+docker exec rstudio-shiny sh -c "echo 'umask 002' >> /etc/profile"
+
+user=mwolfshorndl
 user=cgrant
-pass=secr3t
+user=nswanson
+user=admin
+pass=secretp@ssHere
+
+# setup (every user) primary group to staff
+docker exec rstudio-shiny usermod -aG staff $user
+docker exec rstudio-shiny usermod -aG sudo $user
+docker exec rstudio-shiny usermod -aG shiny $user
+docker exec rstudio-shiny usermod -g staff $user
+
+# check groups for user in container
+docker exec rstudio-shiny groups $user
 
 # add user to host
 sudo adduser $user
@@ -571,7 +587,7 @@ exit
 # setup symbolic links in home dir
 sudo su -
 
-user=cgrant
+user=mwolfshorndl
 #user=nswanson
 ln -s /share /home/$user/share
 ln -s /share/data /home/$user/data
