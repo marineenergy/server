@@ -127,7 +127,7 @@ services:
     build: ./nginx
     volumes:
       - /share:/share    
-      - nginx-html:/usr/share/nginx/html
+      - /share/github/mhk-env.github.io:/usr/share/nginx/html
     restart: unless-stopped
     environment:
       VIRTUAL_HOST: www.$HOST
