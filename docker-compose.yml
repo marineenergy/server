@@ -90,7 +90,7 @@ services:
       - geoserver-data:/opt/geoserver/data_dir
       - /share:/share      
     ports:
-      - 8888:8080
+      - 8080:8080
     restart: unless-stopped
     depends_on:
       - postgis
