@@ -3,7 +3,7 @@ version: '3.3'
 volumes:
   nginx-certs:
   nginx-vhost:
-  nginx-html:
+  #nginx-html:
   postgis-data:
   postgis-backups:
   geoserver-data:
