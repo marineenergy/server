@@ -43,7 +43,7 @@ services:
      - "nginx-vhost:/etc/nginx/vhost.d"
      - "nginx-html:/usr/share/nginx/html"
     depends_on: 
-     - nginx-proxy
+     - proxy
      
   postgis:
     container_name: postgis
