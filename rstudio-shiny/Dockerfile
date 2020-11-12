@@ -1,4 +1,4 @@
-FROM rocker/geospatial:latest
+FROM rocker/geospatial:4.0.2
 MAINTAINER "Ben Best" ben@ecoquants.com
 
 RUN /rocker_scripts/install_shiny_server.sh
