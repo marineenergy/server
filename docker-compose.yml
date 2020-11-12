@@ -36,7 +36,8 @@ services:
     restart: always
     container_name: letsencrypt
     environment:
-      DEFAULT_EMAIL: 'ben@ecoquants.com' 
+      DEFAULT_EMAIL: 'ben@ecoquants.com'
+      NGINX_PROXY_CONTAINER: proxy
     volumes:
      - "/var/run/docker.sock:/var/run/docker.sock:ro"
      - "nginx-certs:/etc/nginx/certs:rw"
@@ -49,6 +50,7 @@ services:
     container_name: postgis
     image: kartoza/postgis:11.0-2.5
     environment:
+      PGGSSENCMODE: disable # https://github.com/petere/homebrew-postgresql/issues/51
       POSTGRES_DBNAME: gis
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: $PASSWORD
