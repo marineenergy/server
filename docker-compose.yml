@@ -23,7 +23,7 @@ services:
       - "./nginx-proxy/nginx.tmpl:/app/nginx.tmpl:ro"
       - "nginx-certs:/etc/nginx/certs:ro"
       - "nginx-vhost:/etc/nginx/vhost.d"
-      - "nginx-html:/usr/share/nginx/html"
+      - "/share/github/mhk-env.github.io:/usr/share/nginx/html"
     restart: unless-stopped
     ports:
       - 80:80
@@ -42,7 +42,7 @@ services:
      - "/var/run/docker.sock:/var/run/docker.sock:ro"
      - "nginx-certs:/etc/nginx/certs:rw"
      - "nginx-vhost:/etc/nginx/vhost.d"
-     - "nginx-html:/usr/share/nginx/html"
+     - "/share/github/mhk-env.github.io:/usr/share/nginx/html"
     depends_on: 
      - proxy
      
