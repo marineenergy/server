@@ -343,6 +343,19 @@ Haven't figured out how to RUN these commands after user admin is created in rst
 
     ```
 
+### shiny app symbolic links
+
+```
+lrwxrwxrwx 1 root root   41 Oct 12 22:54 datasets    -> /share/github/mhk-env_shiny-apps/datasets
+lrwxrwxrwx 1 root root   38 Apr 30  2020 index.html  -> /opt/shiny-server/samples/welcome.html
+lrwxrwxrwx 1 root root   39 Jul 31 17:33 report      -> /share/github/mhk-env_shiny-apps/report
+lrwxrwxrwx 1 root root   43 Nov 11 22:13 report-gen  -> /share/github/mhk-env_shiny-apps/report-gen
+lrwxrwxrwx 1 root root   37 Apr 30  2020 sample-apps -> /opt/shiny-server/samples/sample-apps
+lrwxrwxrwx 1 root root   19 Jul 15 19:35 shiny       -> /share/github/shiny
+lrwxrwxrwx 1 root root   40 Nov 12 00:09 test_dl     -> /share/github/mhk-env_shiny-apps/test_dl
+lrwxrwxrwx 1 root root   46 Nov  2 22:55 tethys      -> /share/github/mhk-env_shiny-apps/search_tethys
+```
+
 ## Docker maintenance
 
 ### Push docker image

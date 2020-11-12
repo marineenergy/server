@@ -1,41 +1,42 @@
-FROM rocker/geospatial:latest
+FROM rocker/geospatial:;latest
 MAINTAINER "Ben Best" ben@ecoquants.com
 
-# install extra packages 
+RUN /rocker_scripts/install_shiny_server.sh
+RUN /rocker_scripts/install_python.sh
+
+EXPOSE 3838
+
 RUN install2.r --error \
-  # for shiny:
-  Rcpp \
-  httpuv \
-  shiny \
-  # for app: https://github.com/BenioffOceanInitiative/ships4whales-app/blob/master/shiny_ships/app.R
   dbplyr \
+  DiagrammeR \
+  DT \
+  flexdashboard \
   fs \
   glue \
   gstat \
+  gt \
   here \
+  htmltools \
+  httpuv \
+  jsonlite \
+  kableExtra \
   leaflet \
-  units \
+  mapedit \
+  mapview \
+  plumber \
   RColorBrewer \
-  RPostgreSQL \
+  Rcpp \
+  reticulate \
+  RColorBrewer \
+  rhandsontable \
   RPostgres \
-  shinydashboard
-  
-  # already included: https://tidyverse.tidyverse.org
-  #   dplyr
-  #   lubridate
-  # already included: https://github.com/rocker-org/geospatial
-  #   maptools
-  #   raster
-  #   rgdal
-  #   rgeos
-  #   sf
-  #   sp
-  #   tmap
-  
-# add Shiny, per https://github.com/rocker-org/rocker/issues/235#issuecomment-299036810
-RUN export ADD=shiny && bash /etc/cont-init.d/add
+  shiny \
+  shinydashboard \
+  shinydashboardPlus \
+  shinyjs \
+  shinyWidgets \
+  units \
+  urltools \
+  webshot
 
-# install Shiny apps
-#RUN cd /srv && rm -rf shiny-server && \
-#    git clone https://github.com/marinebon/iea-ne_apps.git shiny-server
-    
+CMD ["/init"]

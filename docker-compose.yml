@@ -1,22 +1,17 @@
 version: '3.3'
 
 volumes:
-  # share:
-  # share:
-  #   driver: local
-  #   driver_opts:
-  #     o: bind
-  #     type: none
-  #     device: /share
+  nginx-certs:
+  nginx-vhost:
+  nginx-html:
   postgis-data:
   postgis-backups:
   geoserver-data:
-  #shiny-apps:
-  #nginx-html:
+  shiny-apps:
 
 services:
 
-  nginx-proxy:
+  proxy:
     container_name: proxy
     image: jwilder/nginx-proxy
     env_file: .env
@@ -24,18 +19,32 @@ services:
       DEFAULT_HOST: www.$HOST
       VIRTUAL_HOST_SPECIFIC_PORT: 'true'
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx-proxy/nginx.tmpl:/app/nginx.tmpl:ro
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "./nginx-proxy/nginx.tmpl:/app/nginx.tmpl:ro"
+      - "nginx-certs:/etc/nginx/certs:ro"
+      - "nginx-vhost:/etc/nginx/vhost.d"
+      - "nginx-html:/usr/share/nginx/html"
     restart: unless-stopped
     ports:
       - 80:80
-      # TODO: add https
-      #- 443:443
+      - 443:443
     depends_on:
-      - geoserver
-      - rstudio-shiny
       - nginx
 
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    container_name: letsencrypt
+    environment:
+      DEFAULT_EMAIL: 'ben@ecoquants.com' 
+    volumes:
+     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+     - "nginx-certs:/etc/nginx/certs:rw"
+     - "nginx-vhost:/etc/nginx/vhost.d"
+     - "nginx-html:/usr/share/nginx/html"
+    depends_on: 
+     - nginx-proxy
+     
   postgis:
     container_name: postgis
     image: kartoza/postgis:11.0-2.5
@@ -73,6 +82,7 @@ services:
     image: kartoza/geoserver:2.15.2
     environment:
       VIRTUAL_HOST: gs.$HOST
+      LETSENCRYPT_HOST: "gs.$HOST"
       USERNAME: admin
       PASS: $PASSWORD
       GEOSERVER_ADMIN_PASSWORD: $PASSWORD
@@ -90,30 +100,32 @@ services:
       timeout: 10s
       retries: 3
 
-  rstudio-shiny:
-    container_name: rstudio-shiny
+  rstudio:
+    container_name: rstudio
     build: ./rstudio-shiny
-    image: bdbest/rstudio-shiny:s4w
+    image: bdbest/rstudio-shiny:mhk-env
     volumes:
       - /share:/share    
-    #  - shiny-apps:/srv/shiny-server
+      - shiny-apps:/srv/shiny-server
     restart: unless-stopped
     environment:
       # [Running virtual hosts on different ports of the same container · Issue #560 · jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy/issues/560)
       VIRTUAL_HOST: "rstudio.$HOST:8787,shiny.$HOST:3838"
+      LETSENCRYPT_HOST: "rstudio.$HOST,shiny.$HOST,api.$HOST"
       ROOT: 'true'
       USER: admin
       PASSWORD: $PASSWORD
     ports:
-      - 8787:8787
-      - 3838:3838
+      - 8787:8787 # rstudio
+      - 3838:3838 # shiny
+      - 8888:8888 # api      
 
   nginx:
     container_name: nginx
     build: ./nginx
     volumes:
       - /share:/share    
-    # - nginx-html:/usr/share/nginx/html
+      - nginx-html:/usr/share/nginx/html
     restart: unless-stopped
     environment:
       VIRTUAL_HOST: www.$HOST
