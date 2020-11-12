@@ -131,6 +131,8 @@ services:
     restart: unless-stopped
     environment:
       VIRTUAL_HOST: www.$HOST
+      LETSENCRYPT_HOST: $HOST,www.$HOST
+      LETSENCRYPT_EMAIL: ben@ecoquants.com
     ports:
       - 8088:80
 
