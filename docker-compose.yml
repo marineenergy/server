@@ -83,8 +83,8 @@ services:
     container_name: geoserver
     image: kartoza/geoserver:2.15.2
     environment:
-      VIRTUAL_HOST: gs.$HOST
-      LETSENCRYPT_HOST: "gs.$HOST"
+      VIRTUAL_HOST: geo.$HOST
+      LETSENCRYPT_HOST: "geo.$HOST"
       USERNAME: admin
       PASS: $PASSWORD
       GEOSERVER_ADMIN_PASSWORD: $PASSWORD
@@ -112,15 +112,15 @@ services:
     restart: unless-stopped
     environment:
       # [Running virtual hosts on different ports of the same container · Issue #560 · jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy/issues/560)
-      VIRTUAL_HOST: "rstudio.$HOST:8787,shiny.$HOST:3838"
+      VIRTUAL_HOST: "rstudio.$HOST:8787,shiny.$HOST:3838,api.$HOST:8888"
       LETSENCRYPT_HOST: "rstudio.$HOST,shiny.$HOST,api.$HOST"
       ROOT: 'true'
       USER: admin
       PASSWORD: $PASSWORD
     ports:
-      - 8787:8787 # rstudio
-      - 3838:3838 # shiny
-      - 8888:8888 # api      
+      - 8787:8787
+      - 3838:3838
+      - 8888:8888
 
   nginx:
     container_name: nginx
