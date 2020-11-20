@@ -328,32 +328,40 @@ docker exec -it nginx bash
 
 Haven't figured out how to RUN these commands after user admin is created in rstudio-shiny container.
 
-1. Setup **permissions and shortcuts** for admin in rstudio.
+1. Add shiny to staff so has permission to install libraries into `/usr/local/lib/R/site-library`.
 
-    After logging into rstudio.iea-ne.us, to go to Terminal window and run:
-
-    ```bash
-    sudo su -
-    ln -s /share /home/admin/share
-    ln -s /share/data /home/admin/data
-    ln -s /share/github /home/admin/github
-    ln -s /share/github/mhk-env.github.io /home/admin/www
-    ln -s /share/github/mhk-env_shiny-apps /home/admin/shiny-apps
-    ln -s /var/log/shiny-server /home/admin/shiny-logs
-
-    ```
+```bash
+sudo usermod -aG staff shiny
+```
 
 ### shiny app symbolic links
 
 ```
-lrwxrwxrwx 1 root root   41 Oct 12 22:54 datasets    -> /share/github/mhk-env_shiny-apps/datasets
-lrwxrwxrwx 1 root root   38 Apr 30  2020 index.html  -> /opt/shiny-server/samples/welcome.html
-lrwxrwxrwx 1 root root   39 Jul 31 17:33 report      -> /share/github/mhk-env_shiny-apps/report
-lrwxrwxrwx 1 root root   43 Nov 11 22:13 report-gen  -> /share/github/mhk-env_shiny-apps/report-gen
-lrwxrwxrwx 1 root root   37 Apr 30  2020 sample-apps -> /opt/shiny-server/samples/sample-apps
-lrwxrwxrwx 1 root root   19 Jul 15 19:35 shiny       -> /share/github/shiny
-lrwxrwxrwx 1 root root   40 Nov 12 00:09 test_dl     -> /share/github/mhk-env_shiny-apps/test_dl
-lrwxrwxrwx 1 root root   46 Nov  2 22:55 tethys      -> /share/github/mhk-env_shiny-apps/search_tethys
+cd /srv/shiny-server
+sudo su
+ln -s /share/github/mhk-env_shiny-apps/datasets datasets
+ln -s /share/github/mhk-env_shiny-apps/report report0
+ln -s /share/github/mhk-env_shiny-apps/report-gen report
+ln -s /share/github/mhk-env_shiny-apps/search_tethys tethys
+```
+
+### postgis add postgres superuser
+
+```bash
+psql -h localhost -p 5432 -U admin -W gis
+
+su postgres
+psql
+
+docker-compose up 2>> up_error.txt 1>> up_out.txt
+```
+
+
+
+```sql
+CREATE ROLE postgres LOGIN SUPERUSER;
+
+
 ```
 
 ## Docker maintenance
@@ -566,53 +574,46 @@ server: mhk-env.us
 
 ```bash
 # setup (once) staff to be shared by admin, and default permissions 775
-docker exec rstudio-shiny gpasswd -a admin staff
-docker exec rstudio-shiny sh -c "echo 'umask 002' >> /etc/profile"
+docker exec rstudio gpasswd -a admin staff
+docker exec rstudio sh -c "echo 'umask 002' >> /etc/profile"
+
+docker exec -it rstudio bash
 
 user=mwolfshorndl
-user=cgrant
-user=nswanson
-user=admin
+#user=cgrant
+#user=nswanson
+#user=admin
 pass=secretp@ssHere
 
-# setup (every user) primary group to staff
-docker exec rstudio-shiny usermod -aG staff $user
-docker exec rstudio-shiny usermod -aG sudo $user
-docker exec rstudio-shiny usermod -aG shiny $user
-docker exec rstudio-shiny usermod -g staff $user
+# userdel $user; groupdel $user
 
-# check groups for user in container
-docker exec rstudio-shiny groups $user
+# add user inside rstudio docker container from host
+useradd -m -p $(openssl passwd -crypt $pass) $user
+
+# setup (every user) primary group to staff
+usermod -aG staff $user
+usermod -aG sudo $user
+usermod -aG shiny $user
+usermod -g staff $user
+groups $user
+
+# setup symbolic links in home dir
+ln -s /share                /home/$user/share
+ln -s /share/data           /home/$user/data
+ln -s /share/github         /home/$user/github
+ln -s /srv/shinyapps        /home/$user/shiny-apps
+ln -s /var/log/shiny-server /home/$user/shiny-logs
+
 
 # add user to host
+exit
 sudo adduser $user
 sudo usermod -aG sudo $user
-
-# add user inside rstudio-shiny docker container from host
-docker exec rstudio-shiny adduser $user --gecos 'First Last,RoomNumber,WorkPhone,HomePhone' --disabled-password
-docker exec rstudio-shiny sh -c "echo $user:$pass | sudo chpasswd"
 
 # check in container
 docker exec -it rstudio-shiny bash
 cat /etc/passwd
 exit
-
-# setup symbolic links in home dir
-sudo su -
-
-user=mwolfshorndl
-#user=nswanson
-ln -s /share /home/$user/share
-ln -s /share/data /home/$user/data
-ln -s /share/github /home/$user/github
-ln -s /share/github/mhk-env.github.io /home/$user/www
-ln -s /share/github/mhk-env_shiny-apps /home/$user/shiny-apps
-ln -s /var/log/shiny-server /home/$user/shiny-logs
-exit
-
-# add to group shared by admin
-sudo usermod –a –G staff $user
-sudo usermod -aG staff $user
 ```
 
 
