@@ -69,13 +69,8 @@ Create droplet at https://digitalocean.com with ben@ecoquants.com (Google login)
 - Choose an image : Distributions : Marketplace :
   - **Docker** by DigitalOcean VERSION 18.06.1 OS Ubuntu 18.04
 - Choose a plan : Standard :
-  - _smallest_:
-    - **$20 /mo** $0.030 /hour
-    - 4 GB / 2 CPUs
-    - 80 GB SSD disk
-    - 4 TB transfer
   - _small_:
-    - **$40 /mo** $0.060 /hour
+    - **$40/mo** $0.060 /hour
     - 8 GB / 4 CPUs
     - 160 GB SSD disk
     - 5 TB transfer
@@ -89,6 +84,10 @@ Create droplet at https://digitalocean.com with ben@ecoquants.com (Google login)
 - Choose a hostname :
   - _smallest_:
     - **mhk-env.us**
+
+Add an external disk drive, especially for downloading and consuming the MarineCadastre datasets:
+  - **$50/mo** for 500 GB volume
+
 
 Email recieved with IP and temporary password:
 
