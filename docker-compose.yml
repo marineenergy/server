@@ -137,7 +137,7 @@ services:
       - 8088:80
   
   nginx-dev:
-    container_name: nginx
+    container_name: nginx-dev
     build: ./nginx
     volumes:
       - /share:/share    
