@@ -47,6 +47,19 @@ Uses: https://github.com/ekalinin/github-markdown-toc
   - [PostGIS](https://postgis.net)<br>
     iea-ne.us **:5432**
 
+### Development environments
+
+We can edit code in **rstudio** and access the same database. In cases where the tables change, let's just create new tables or add a column like production = T/F or some such within the existing datase.
+
+- Website:<br>
+  **www-dev.\***, **mhk-env.us**
+  - [Nginx](https://www.nginx.com/)
+  - [Rmarkdown website](https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html)
+
+And for Shiny apps, we'll just create *_dev symbolic links (`ln -s`) under `/srv/shiny-server/`.
+  
+## Containerization
+
 - Containerized using:
   - [docker](https://docs.docker.com/engine/installation/)
   - [docker-compose](https://docs.docker.com/compose/install/)

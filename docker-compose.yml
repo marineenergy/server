@@ -135,5 +135,19 @@ services:
       LETSENCRYPT_EMAIL: ben@ecoquants.com
     ports:
       - 8088:80
+  
+  nginx-dev:
+    container_name: nginx
+    build: ./nginx
+    volumes:
+      - /share:/share    
+      - /share/github/mhk-env.github.io_dev:/usr/share/nginx/html
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: www-dev.$HOST
+      LETSENCRYPT_HOST: www-dev.$HOST
+      LETSENCRYPT_EMAIL: ben@ecoquants.com
+    ports:
+      - 8089:80
 
   
