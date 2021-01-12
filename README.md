@@ -58,6 +58,35 @@ We can edit code in **rstudio** and access the same database. In cases where the
 
 And for Shiny apps, we'll just create *_dev symbolic links (`ln -s`) under `/srv/shiny-server/`.
   
+  
+### Working Development and Production environments
+
+
+- static web site:
+  - production:  
+    - filesystem: `/share/github/mhk-env.github.io`
+    - endpoint: https://mhk-env.us
+  - development: 
+    - filesystem: `/share/github/mhk-env.github.io_dev`
+    - endpoint: https://www-dev.mhk-env.us
+- interactive shiny app:
+  - filesystems:
+    - production:  `/share/github/mhk-env_shiny-apps`
+    - development: `/share/github/mhk-env_shiny-apps_dev`
+  - a single app folder: `report`
+    - setup once the symbolic link to the dev version of the app folder: `ln -s /share/github/mhk-env_shiny-apps_dev/report /srv/shiny-server/report-dev`
+    - endpoint: https://shiny.mhk-env.us/report-dev
+
+To make changes to the code above (eg either website or Shiny app):
+
+1. Log into https://rstudio.mhk-env.us
+1. Open the project by 2x-clicking in the Files pane: to {filesystem}/*.Rproj
+1. Create or change to the branch of interest in the Git pane
+1. Make changes, git commit (possibly mentioning the issue #) and push them.
+1. Visit the https://github.com/mhk-env/{repo}
+1. When ready to merge with production, create a new Pull Request selecting the branch. Merge pull request. Visit the production filesystem and do a git pull.
+
+
 ## Containerization
 
 - Containerized using:
