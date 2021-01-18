@@ -17,7 +17,7 @@ Uses: https://github.com/ekalinin/github-markdown-toc
    * [Test webserver](#test-webserver)
 * [Setup domain iea-ne.us](#setup-domain-iea-neus)
 * [Run docker-compose](#run-docker-compose)
-* [mhk-env.us manual post-docker install steps](#mhk-envus-manual-post-docker-install-steps)
+* [marineenergy.app manual post-docker install steps](#mhk-envus-manual-post-docker-install-steps)
    * [rstudio-shiny](#rstudio-shiny)
 * [Docker maintenance](#docker-maintenance)
    * [Push docker image](#push-docker-image)
@@ -33,7 +33,7 @@ Uses: https://github.com/ekalinin/github-markdown-toc
 ## Server software
 
 - Website:<br>
-  **www.\***, **mhk-env.us**
+  **www.\***, **marineenergy.app**
   - [Nginx](https://www.nginx.com/)
   - [Rmarkdown website](https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html)
 - Analytical apps:
@@ -52,7 +52,7 @@ Uses: https://github.com/ekalinin/github-markdown-toc
 We can edit code in **rstudio** and access the same database. In cases where the tables change, let's just create new tables or add a column like production = T/F or some such within the existing datase.
 
 - Website:<br>
-  **www-dev.\***, **mhk-env.us**
+  **www-dev.\***, **marineenergy.app**
   - [Nginx](https://www.nginx.com/)
   - [Rmarkdown website](https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html)
 
@@ -65,21 +65,21 @@ And for Shiny apps, we'll just create *_dev symbolic links (`ln -s`) under `/srv
 - static web site:
   - production:  
     - filesystem: `/share/github/mhk-env.github.io`
-    - endpoint: https://mhk-env.us
+    - endpoint: https://marineenergy.app
   - development: 
     - filesystem: `/share/github/mhk-env.github.io_dev`
-    - endpoint: https://www-dev.mhk-env.us
+    - endpoint: https://www-dev.marineenergy.app
 - interactive shiny app:
   - filesystems:
     - production:  `/share/github/mhk-env_shiny-apps`
     - development: `/share/github/mhk-env_shiny-apps_dev`
   - a single app folder: `report`
     - setup once the symbolic link to the dev version of the app folder: `ln -s /share/github/mhk-env_shiny-apps_dev/report /srv/shiny-server/report-dev`
-    - endpoint: https://shiny.mhk-env.us/report-dev
+    - endpoint: https://shiny.marineenergy.app/report-dev
 
 To make changes to the code above (eg either website or Shiny app):
 
-1. Log into https://rstudio.mhk-env.us
+1. Log into https://rstudio.marineenergy.app
 1. Open the project by 2x-clicking in the Files pane: to {filesystem}/*.Rproj
 1. Create or change to the branch of interest in the Git pane
 1. Make changes, git commit (possibly mentioning the issue #) and push them.
@@ -99,7 +99,17 @@ To make changes to the code above (eg either website or Shiny app):
 Secure shell (SSH), eg for Ben Best on Mac Terminal:
 
 ```bash
-sshpass -f ~/private/password_mhk-env.us ssh bbest@mhk-env.us
+ssh bbest@marineenergy.app
+```
+
+### Setup ssh keys
+
+See [How To Set Up SSH Keys | DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-2).
+
+```bash
+ssh-keygen -t rsa
+ssh-copy-id bbest@marineenergy.app
+# Using password in `~/private/password_mhk-env.us`
 ```
 
 ## Create Server on DigitalOcean
@@ -125,7 +135,7 @@ Create droplet at https://digitalocean.com with ben@ecoquants.com (Google login)
   - **1  Droplet**
 - Choose a hostname :
   - _smallest_:
-    - **mhk-env.us**
+    - **marineenergy.app**
 
 Add an external disk drive, especially for downloading and consuming the MarineCadastre datasets:
   - **$50/mo** for 500 GB volume
@@ -133,11 +143,11 @@ Add an external disk drive, especially for downloading and consuming the MarineC
 
 Email recieved with IP and temporary password:
 
-- _mhk-env.us_:
+- _marineenergy.app_:
 
   > Your new Droplet is all set to go! You can access it using the following credentials:
   > 
-  > Droplet Name: mhk-env.us
+  > Droplet Name: marineenergy.app
   > IP Address: 157.245.189.38
   > Username: root
   > Password: 513dbca94734429761db936640
@@ -162,7 +172,7 @@ cat ~/private/password_mhk-env.us
 Then you can login  via:
 
 ```bash
-sshpass -f ~/private/password_mhk-env.us ssh bbest@mhk-env.us
+sshpass -f ~/private/password_mhk-env.us ssh bbest@marineenergy.app
 ```
 
 ## Install Docker
@@ -278,16 +288,16 @@ docker stop test-web
 
 ## Setup domain iea-ne.us
 
-- Bought domain **mhk-env.us** for **$12/yr** with account bdbest@gmail.com.
+- Bought domain **marineenergy.app** for **$12/yr** with account bdbest@gmail.com.
 
-- DNS matched to server IP `64.225.118.240` to domain **mhk-env.us** via [Google Domains]( https://domains.google.com/m/registrar/iea-ne.us/dns), plus the following subdomains added under **Custom resource records** with:
+- DNS matched to server IP `64.225.118.240` to domain **marineenergy.app** via [Google Domains]( https://domains.google.com/m/registrar/iea-ne.us/dns), plus the following subdomains added under **Custom resource records** with:
 
 - Type: **A**, Data:**157.245.189.38** and Name:
   - **@**
   - **gs**
   - **rstudio**
   - **shiny**
-- Name: **www**, Type: **CNAME**, Data:**mhk-env.us**
+- Name: **www**, Type: **CNAME**, Data:**marineenergy.app**
 
 ## Run docker-compose
 
@@ -310,7 +320,7 @@ cd ~/mhk-env_server-software
 # set environment variables
 echo "PASSWORD=S3cr!tpw" > .env
 # actual password on Ben's laptop: ~/private/password_mhk-env.us_server-software
-echo 'HOST=mhk-env.us' >> .env
+echo 'HOST=marineenergy.app' >> .env
 cat .env
 
 # launch
@@ -346,11 +356,11 @@ docker-compose restart
 docker-compose stop
 ```
 
-## mhk-env.us manual post-docker install steps
+## marineenergy.app manual post-docker install steps
 
 TODO: fold into `docker-compose.yml`
 
-Log into rstudio.mhk-env.us as admin and use the Terminal to:
+Log into rstudio.marineenergy.app as admin and use the Terminal to:
 
 ```bash
 sudo chown -R 777 /share
@@ -521,7 +531,7 @@ vda     252:0    0   160G  0 disk
 
 ### make space 
 
-Since disk is full with Docker volume /share, in rstudio.mhk-env.us Terminal:
+Since disk is full with Docker volume /share, in rstudio.marineenergy.app Terminal:
 
 ```bash
 du -a /share/data/marinecadastre.gov | sort -n -r | head -n 5
@@ -608,7 +618,7 @@ findmnt --verify --verbose
 [Download Cyberduck](https://cyberduck.io/download/)
 
 
-server: mhk-env.us
+server: marineenergy.app
 
 
 ## Add user(s)
@@ -620,10 +630,10 @@ docker exec rstudio sh -c "echo 'umask 002' >> /etc/profile"
 
 docker exec -it rstudio bash
 
-user=mwolfshorndl
+#user=mwolfshorndl
+#user=bbest
 #user=cgrant
-#user=nswanson
-#user=admin
+user=nswanson
 pass=secretp@ssHere
 
 # userdel $user; groupdel $user
@@ -645,7 +655,6 @@ ln -s /share/github         /home/$user/github
 ln -s /srv/shinyapps        /home/$user/shiny-apps
 ln -s /var/log/shiny-server /home/$user/shiny-logs
 
-
 # add user to host
 exit
 sudo adduser $user
@@ -656,8 +665,6 @@ docker exec -it rstudio-shiny bash
 cat /etc/passwd
 exit
 ```
-
-
 
 
 ## TODO
