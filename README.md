@@ -628,6 +628,10 @@ server: marineenergy.app
 docker exec rstudio gpasswd -a admin staff
 docker exec rstudio sh -c "echo 'umask 002' >> /etc/profile"
 
+# override RStudio's default group read only with group read & write
+docker exec rstudio sh -c "echo 'Sys.umask('2')\n' >> /usr/local/lib/R/etc/Rprofile.site"
+# vs quick fix in Terminal of rstudio.marineenergy.app: sudo chmod -R g+w *
+
 docker exec -it rstudio bash
 
 #user=mwolfshorndl
@@ -666,6 +670,54 @@ cat /etc/passwd
 exit
 ```
 
+## Stop, start, restart and list services for rstudio and shiny-server
+
+https://wiki.gentoo.org/wiki/S6
+
+Log into terminal:
+
+```bash
+ssh bbest@marineenergy.app
+```
+
+Then into docker container:
+
+```bash
+docker exec -it rstudio bash
+```
+
+Get list of s6 processes:
+
+```bash
+# list s6 services
+ps xf -o pid,ppid,pgrp,euser,args
+```
+
+```
+PID  PPID  PGRP EUSER    COMMAND
+505     0   505 root     bash
+745   505   745 root      \_ ps xf -o pid,ppid,pgrp,euser,args
+  1     0     1 root     s6-svscan -t0 /var/run/s6/services
+ 34     1     1 root     s6-supervise s6-fdholderd
+211     1     1 root     s6-supervise rstudio
+213     1     1 root     s6-supervise shiny-server
+214   213   214 root      \_ /opt/shiny-server/ext/node/bin/shiny-server /opt/shiny-server/lib/main.js
+226   214   214 root          \_ xtail /var/log/shiny-server/
+549   214   549 root          \_ su -s /bin/bash --login -p -- shiny -c cd \/srv\/shiny-server\/sample-apps\/hello && R --no-save --slave -f \/opt\/shiny-server\/R\/SockJSAdapter\.R
+551   214   551 root          \_ su -s /bin/bash --login -p -- shiny -c cd \/srv\/shiny-server\/sample-apps\/rmd && R --no-save --slave -f \/opt\/shiny-server\/R\/SockJSAdapter\.R
+```
+
+Manage a service:
+
+```bash
+cd /var/run/s6/services
+# stop
+s6-svc -d rstudio
+# start
+s6-svc -u rstudio
+# restart
+s6-svc -r rstudio
+```
 
 ## TODO
 
