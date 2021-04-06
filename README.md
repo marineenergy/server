@@ -443,6 +443,25 @@ echo "PASSWORD=S3cr!tpw" > .env
 echo "HOST=iea-ne.us" >> .env
 cat .env
 
+# stop all
+docker stop $(docker ps -q)
+
+
+# rename
+docker rename nginx nginx_old
+docker rename nginx-dev nginx-dev_old
+docker rename postgis postgis_old
+docker rename postgis postgis_new
+docker rename postgis_old postgis
+docker rename proxy proxy_old
+docker rename rstudio rstudio_old
+docker rename rstudio rstudio_new
+docker rename rstudio_old rstudio
+docker rename letsencrypt letsencrypt_old
+docker rename geoserver geoserver_old
+
+
+
 # launch
 docker-compose up -d
 
@@ -633,6 +652,9 @@ docker exec rstudio sh -c "echo 'Sys.umask('2')\n' >> /usr/local/lib/R/etc/Rprof
 # vs quick fix in Terminal of rstudio.marineenergy.app: sudo chmod -R g+w *
 
 docker exec -it rstudio bash
+
+# Add shiny to staff so has permission to install libraries into `/usr/local/lib/R/site-library` and write files
+usermod -aG staff shiny
 
 #user=mwolfshorndl
 #user=bbest
