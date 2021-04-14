@@ -639,6 +639,25 @@ findmnt --verify --verbose
 
 server: marineenergy.app
 
+## Setup
+
+```bash
+docker exec nginx sh -c "ln -s echo /share/api_out /usr/share/nginx/html/api_out"
+docker exec -it nginx bash
+```
+
+To get latest for pdf generation:
+
+```r
+# If you see an error message like “tlmgr: Remote repository is newer than local (2018 < 2019)”
+tinytex::install_tinytex(force=T)
+
+# If an error occurs when compiling a LaTeX to PDF,
+tinytex::tlmgr_update()
+
+# if get something like ! LaTeX Error: File `amsmath.sty' not found.
+tinytex::parse_install("report_test_1b114955d523.log")
+```
 
 ## Add user(s)
 
