@@ -659,6 +659,14 @@ tinytex::tlmgr_update()
 tinytex::parse_install("report_test_1b114955d523.log")
 ```
 
+Remove TexLive in fafor of TinyTex:
+
+[installing - How to remove everything related to TeX Live for fresh install on Ubuntu? - TeX - LaTeX Stack Exchange](https://tex.stackexchange.com/questions/95483/how-to-remove-everything-related-to-tex-live-for-fresh-install-on-ubuntu)
+
+```bash
+sudo apt-get purge texlive*
+```
+
 ## Add user(s)
 
 ```bash
