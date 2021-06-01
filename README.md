@@ -683,6 +683,12 @@ docker exec -it rstudio bash
 # Add shiny to staff so has permission to install libraries into `/usr/local/lib/R/site-library` and write files
 usermod -aG staff shiny
 
+# set primary group to staff
+usermod -g staff shiny
+#confirm primary group set to staff
+id shiny
+# uid=998(shiny) gid=50(staff) groups=50(staff)
+
 #user=mwolfshorndl
 #user=bbest
 #user=cgrant
