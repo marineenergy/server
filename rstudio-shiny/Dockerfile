@@ -1,4 +1,4 @@
-FROM rocker/geospatial:4.0.2
+FROM rocker/geospatial:latest # 4.1.0 on 2021-07-23
 MAINTAINER "Ben Best" ben@ecoquants.com
 
 RUN /rocker_scripts/install_shiny_server.sh
@@ -32,11 +32,15 @@ RUN install2.r --error \
   RPostgres \
   shiny \
   shinydashboard \
-  shinydashboardPlus \
   shinyjs \
   shinyWidgets \
   units \
   urltools \
   webshot
 
+RUN installGithub.r --error \
+  r-lib/gargle \
+  MarkEdmondson1234/googleAuthR \
+  RinteRface/shinydashboardPlus
+  
 CMD ["/init"]
