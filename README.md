@@ -689,10 +689,10 @@ usermod -g staff shiny
 id shiny
 # uid=998(shiny) gid=50(staff) groups=50(staff)
 
-#user=mwolfshorndl
+user=cdobbelaere
 #user=bbest
 #user=cgrant
-user=nswanson
+# user=nswanson
 pass=secretp@ssHere
 
 # userdel $user; groupdel $user
