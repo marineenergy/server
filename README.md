@@ -692,13 +692,15 @@ id shiny
 user=cdobbelaere
 #user=bbest
 #user=cgrant
-# user=nswanson
+#user=nswanson
 pass=secretp@ssHere
 
 # userdel $user; groupdel $user
 
 # add user inside rstudio docker container from host
 useradd -m -p $(openssl passwd -crypt $pass) $user
+# echo usermod -p "$pass" $user
+# usermod -p $(openssl passwd -crypt $pass) $user
 
 # setup (every user) primary group to staff
 usermod -aG staff $user
