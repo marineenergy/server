@@ -1,0 +1,31 @@
+
+Command 'docker-compse' not found, did you mean:
+
+  command 'docker-compose' from snap docker (18.06.1-ce)
+  command 'docker-compose' from deb docker-compose
+
+See 'snap info <snapname>' for additional versions.
+
+Starting nginx ... 
+postgis is up-to-date
+Starting rstudio ... 
+Starting nginx
+Starting rstudio
+Starting postgis-backup ... 
+Starting postgis-backup
+Starting geoserver ... 
+Starting geoserver
+[1A[2KStarting rstudio ... [32mdone[0m[1B[1A[2KStarting nginx ... [32mdone[0m[1BStarting proxy ... 
+Starting proxy
+[1A[2KStarting proxy ... [32mdone[0m[1BStarting letsencrypt ... 
+Starting letsencrypt
+[1A[2KStarting letsencrypt ... [32mdone[0m[1B[1A[2KStarting postgis-backup ... [32mdone[0m[1B[1A[2KStarting geoserver ... [32mdone[0m[1BStopping geoserver      ... 
+Stopping letsencrypt    ... 
+Stopping proxy          ... 
+Stopping nginx          ... 
+Stopping rstudio        ... 
+Stopping postgis-backup ... 
+Stopping postgis        ... 
+[6A[2KStopping letsencrypt    ... [32mdone[0m[6B[5A[2KStopping proxy          ... [32mdone[0m[5B[4A[2KStopping nginx          ... [32mdone[0m[4B[3A[2KStopping rstudio        ... [32mdone[0m[3B[2A[2KStopping postgis-backup ... [32mdone[0m[2BKilling geoserver ... 
+Killing postgis   ... 
+[2A[2KKilling geoserver ... [31merror[0m[2BAborting.
