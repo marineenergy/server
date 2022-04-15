@@ -172,7 +172,7 @@ cat ~/private/password_mhk-env.us
 Then you can login  via:
 
 ```bash
-sshpass -f ~/private/password_mhk-env.us ssh bbest@marineenergy.app
+sshpass -f ~/My\ Drive/private/password_mhk-env.us ssh bbest@marineenergy.app
 ```
 
 ## Install Docker
