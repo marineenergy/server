@@ -67,7 +67,7 @@ services:
     container_name: postgis-backup
     image: kartoza/pg-backup:11.0
     volumes:
-      - /share/postgis-backups:/backups
+      - /mnt/backups/pg_backups:/backups
     environment:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
