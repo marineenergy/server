@@ -5,7 +5,7 @@ volumes:
   nginx-vhost:
   #nginx-html:
   postgis-data:
-  /share/postgis-backups:postgis-backups
+  #postgis-backups:
   geoserver-data:
   shiny-apps:
 
@@ -67,7 +67,7 @@ services:
     container_name: postgis-backup
     image: kartoza/pg-backup:11.0
     volumes:
-      - postgis-backups:/backups
+      - /share/postgis-backups:/backups
     environment:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
