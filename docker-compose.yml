@@ -75,6 +75,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASS: $PASSWORD
       DUMPPREFIX: PG_gis
+      REMOVE_BEFORE: 30 # remove backups more than 30 days old
     restart: unless-stopped
     depends_on:
       - postgis
