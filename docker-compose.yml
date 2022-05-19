@@ -5,7 +5,7 @@ volumes:
   nginx-vhost:
   #nginx-html:
   postgis-data:
-  postgis-backups: /share/postgis-backups
+  /share/postgis-backups:postgis-backups
   geoserver-data:
   shiny-apps:
 
