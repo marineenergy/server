@@ -69,13 +69,14 @@ services:
     volumes:
       - /mnt/backups/pg_backups:/backups
     environment:
-      POSTGRES_HOST: db
+      POSTGRES_HOST: postgis
       POSTGRES_PORT: 5432
       POSTGRES_DBNAME: gis
       POSTGRES_USER: admin
       POSTGRES_PASS: $PASSWORD
       DUMPPREFIX: PG_gis
       REMOVE_BEFORE: 30 # remove backups more than 30 days old
+      # CRON_SCHEDULE: "*/1 * * * *" # Manually set the backup scheduler for testing. Defaults to midnight.
     restart: unless-stopped
     depends_on:
       - postgis
