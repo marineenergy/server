@@ -24,7 +24,7 @@ services:
       - "nginx-certs:/etc/nginx/certs:ro"
       - "nginx-vhost:/etc/nginx/vhost.d"
       - "/share/github/www:/usr/share/nginx/html"
-    restart: unless-stopped
+    restart: always
     ports:
       - 80:80
       - 443:443
@@ -57,7 +57,7 @@ services:
     volumes:
       - postgis-data:/var/lib/postgresql
       - /share:/share
-    restart: unless-stopped
+    restart: always
     healthcheck:
       test: 'exit 0'
     ports:
@@ -77,7 +77,7 @@ services:
       DUMPPREFIX: PG_gis
       REMOVE_BEFORE: 30 # remove backups more than 30 days old
       # CRON_SCHEDULE: "*/1 * * * *" # Manually set the backup scheduler for testing. Defaults to midnight.
-    restart: unless-stopped
+    restart: always
     depends_on:
       - postgis
 
@@ -95,7 +95,7 @@ services:
   #     - /share:/share      
   #   ports:
   #     - 8080:8080
-  #   restart: unless-stopped
+  #   restart: always
   #   depends_on:
   #    - postgis
   #   healthcheck:
@@ -111,7 +111,7 @@ services:
     volumes:
       - /share:/share    
       - shiny-apps:/srv/shiny-server
-    restart: unless-stopped
+    restart: always
     environment:
       # [Running virtual hosts on different ports of the same container · Issue #560 · jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy/issues/560)
       VIRTUAL_HOST: "rstudio.$HOST:8787,shiny.$HOST:3838,api.$HOST:8888"
@@ -130,7 +130,7 @@ services:
     volumes:
       - /share:/share    
       - /share/github/www:/usr/share/nginx/html
-    restart: unless-stopped
+    restart: always
     environment:
       VIRTUAL_HOST: www.$HOST
       LETSENCRYPT_HOST: $HOST,www.$HOST
@@ -144,7 +144,7 @@ services:
     volumes:
       - /share:/share    
       - /share/github/www_dev:/usr/share/nginx/html
-    restart: unless-stopped
+    restart: always
     environment:
       VIRTUAL_HOST: www-dev.$HOST
       LETSENCRYPT_HOST: www-dev.$HOST
