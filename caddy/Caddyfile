@@ -11,17 +11,17 @@
 # - Switch to [DNS | Records | marineenergy.app | bdbest@gmail.com's Account | Cloudflare](https://dash.cloudflare.com/10dd4c59f6624f7b9ee0e25385b1e930/marineenergy.app/dns/records?recordsSort=desc%3Acontent)
 
 # globally https://caddyserver.com/docs/caddyfile/options#acme-dns
-{
+#{
   # note: CLOUDFLARE_API_TOKEN value set in .env file
-	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-}
+	#acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+#}
 
-(cloudflare) {
-  tls {
-    dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-    resolvers 1.1.1.1
-  }
-}
+#(cloudflare) {
+#  tls {
+#    dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+#    resolvers 1.1.1.1
+#  }
+#}
 
 marineenergy.org {
 	root * /share/github/www
