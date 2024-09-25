@@ -2,9 +2,12 @@
 FROM rstudio/plumber
 LABEL org.opencontainers.image.authors="Docker User <docker@user.org>"
 
-RUN R -e "install.packages(c( \
-  'dbplyr','dplyr','digest','fs','glue','here','httr','jsonlite','librarian', \
-  'pool','purrr','rmarkdown','readr','shiny','stringr','tibble','tidyr','yaml'))"
+RUN install2.r --error \
+ dbplyr dplyr digest fs glue here httr jsonlite librarian pool purrr rmarkdown \
+ RPostgres readr shiny stringr tibble tidyr yaml
+ 
+# RUN installGithub.r \
+#  r-lib/gargle
 
 CMD ["/share/github/api/run-api.R"]
 

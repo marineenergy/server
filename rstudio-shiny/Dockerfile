@@ -7,36 +7,10 @@ RUN /rocker_scripts/install_python.sh
 EXPOSE 3838
 
 RUN install2.r --error \
-  dbplyr \
-  DiagrammeR \
-  DT \
-  flexdashboard \
-  fs \
-  glue \
-  gstat \
-  gt \
-  here \
-  htmltools \
-  httpuv \
-  jsonlite \
-  kableExtra \
-  leaflet \
-  mapedit \
-  mapview \
-  plumber \
-  RColorBrewer \
-  Rcpp \
-  reticulate \
-  RColorBrewer \
-  rhandsontable \
-  RPostgres \
-  shiny \
-  shinydashboard \
-  shinyjs \
-  shinyWidgets \
-  units \
-  urltools \
-  webshot
+  dbplyr DiagrammeR DT flexdashboard fs glue gstat gt here htmltools httpuv \
+  jsonlite kableExtra leaflet librarian mapedit mapview plumber RColorBrewer \
+  Rcpp reticulate RColorBrewer rhandsontable RPostgres shiny shinydashboard \
+  shinyjs shinyWidgets units urltools webshot
 
 RUN installGithub.r \
   r-lib/gargle \
