@@ -364,6 +364,14 @@ bbest @ 2024-09-25
 - how: [How to update existing images with docker-compose? - Stack Overflow](https://stackoverflow.com/questions/49316462/how-to-update-existing-images-with-docker-compose)
 
 ```
+WARN[0100] Found orphan containers (
+[geoserver_server letsencrypt_server proxy_server nginx-dev_server nginx_server]
+) for this project. If you removed or renamed this service in your compose file, 
+you can run this command with the 
+--remove-orphans flag to clean it up. 
+```
+
+```
 # caddy fmt --overwrite Caddyfile
 
 # marineenergy.app ----
