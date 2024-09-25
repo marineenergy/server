@@ -1,12 +1,7 @@
 version: '3.3'
 
 volumes:
-  # nginx-certs:
-  # nginx-vhost:
-  #nginx-html:
-  postgis-data:
-  #postgis-backups:
-  # geoserver-data:
+  postgis-data: # TODO: move postgis-data to /share/postgis
   shiny-apps:
 
 services:
@@ -14,8 +9,6 @@ services:
   caddy:
     container_name: caddy
     image: caddy:latest
-    #build: ./caddy
-    #image: bdbest/caddy:latest-cloudflare
     ports:
       - 80:80
       - 443:443
@@ -32,45 +25,12 @@ services:
     build: ./plumber
     ports:
       - 8000:8000
-    restart: unless-stopped
+    #restart: unless-stopped # TODO: once plumber working, uncomment
     volumes:
       - /share:/share
+    depends_on:
+      - postgis      
 
-  # proxy:
-  #   container_name: proxy
-  #   image: jwilder/nginx-proxy
-  #   env_file: .env
-  #   environment:
-  #     DEFAULT_HOST: www.$HOST
-  #     VIRTUAL_HOST_SPECIFIC_PORT: 'true'
-  #   volumes:
-  #     - "/var/run/docker.sock:/tmp/docker.sock:ro"
-  #     - "./nginx-proxy/nginx.tmpl:/app/nginx.tmpl:ro"
-  #     - "nginx-certs:/etc/nginx/certs:ro"
-  #     - "nginx-vhost:/etc/nginx/vhost.d"
-  #     - "/share/github/www:/usr/share/nginx/html"
-  #   restart: always
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   depends_on:
-  #     - nginx
-
-  # letsencrypt:
-  #   image: jrcs/letsencrypt-nginx-proxy-companion
-  #   restart: always
-  #   container_name: letsencrypt
-  #   environment:
-  #     DEFAULT_EMAIL: 'ben@ecoquants.com'
-  #     NGINX_PROXY_CONTAINER: proxy
-  #   volumes:
-  #    - "/var/run/docker.sock:/var/run/docker.sock:ro"
-  #    - "nginx-certs:/etc/nginx/certs:rw"
-  #    - "nginx-vhost:/etc/nginx/vhost.d"
-  #    - "/share/github/www:/usr/share/nginx/html"
-  #   depends_on: 
-  #    - proxy
-     
   postgis:
     container_name: postgis
     image: kartoza/postgis:11.0-2.5
@@ -106,29 +66,6 @@ services:
     depends_on:
       - postgis
 
-  # geoserver:
-  #   container_name: geoserver
-  #   image: kartoza/geoserver:2.15.2
-  #   environment:
-  #     VIRTUAL_HOST: geo.$HOST
-  #     LETSENCRYPT_HOST: "geo.$HOST"
-  #     USERNAME: admin
-  #     PASS: $PASSWORD
-  #     GEOSERVER_ADMIN_PASSWORD: $PASSWORD
-  #   volumes:
-  #     - geoserver-data:/opt/geoserver/data_dir
-  #     - /share:/share      
-  #   ports:
-  #     - 8080:8080
-  #   restart: always
-  #   depends_on:
-  #    - postgis
-  #   healthcheck:
-  #     test: curl --fail -s http://localhost:8888/ || exit 1
-  #     interval: 1m30s
-  #     timeout: 10s
-  #     retries: 3
-
   rstudio:
     container_name: rstudio
     build: ./rstudio-shiny
@@ -138,43 +75,9 @@ services:
       - shiny-apps:/srv/shiny-server
     restart: always
     environment:
-      # [Running virtual hosts on different ports of the same container · Issue #560 · jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy/issues/560)
-      # VIRTUAL_HOST: "rstudio.$HOST:8787,shiny.$HOST:3838,api.$HOST:8888"
-      # LETSENCRYPT_HOST: "rstudio.$HOST,shiny.$HOST,api.$HOST"
       ROOT: 'true'
       USER: admin
       PASSWORD: $PASSWORD
     ports:
       - 8787:8787
       - 3838:3838
-      #- 8888:8888 # TODO: add api as seperate container
-
-  # nginx:
-  #   container_name: nginx
-  #   build: ./nginx
-  #   volumes:
-  #     - /share:/share    
-  #     - /share/github/www:/usr/share/nginx/html
-  #   restart: always
-  #   environment:
-  #     VIRTUAL_HOST: www.$HOST
-  #     LETSENCRYPT_HOST: $HOST,www.$HOST
-  #     LETSENCRYPT_EMAIL: ben@ecoquants.com
-  #   ports:
-  #     - 8088:80
-  
-  # nginx-dev:
-  #   container_name: nginx-dev
-  #   build: ./nginx
-  #   volumes:
-  #     - /share:/share    
-  #     - /share/github/www_dev:/usr/share/nginx/html
-  #   restart: always
-  #   environment:
-  #     VIRTUAL_HOST: www-dev.$HOST
-  #     LETSENCRYPT_HOST: www-dev.$HOST
-  #     LETSENCRYPT_EMAIL: ben@ecoquants.com
-  #   ports:
-  #     - 8089:80
-
-  
