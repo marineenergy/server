@@ -16,21 +16,10 @@ RUN install2.r --error \
 
 # install R packages on Github 
 # RUN installGithub.r \
-#  r-lib/gargle
-
-## Remove this comment to always bust the Docker cache at this step
-## https://stackoverflow.com/a/55621942/591574
-#ADD https://github.com/rstudio/plumber/commits/ _docker_cache
+#  r-lib/gargle \
+#  && rm -rf /tmp/downloaded_packages/
 
 EXPOSE 8000
-
-#ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(rev(commandArgs())[1]); args <- list(host = '0.0.0.0', port = 8000); if (packageVersion('plumber') >= '1.0.0') { pr$setDocs(TRUE) } else { args$swagger <- TRUE }; do.call(pr$run, args)"]
-
-# Copy installed example to default file at ~/plumber.R
-#ARG ENTRYPOINT_FILE=/usr/local/lib/R/site-library/plumber/plumber/04-mean-sum/plumber.R
-#RUN cp ${ENTRYPOINT_FILE} ~/plumber.R
-
-#CMD ["~/plumber.R"]
 
 CMD Rscript /share/github/api/run-api.R
 
