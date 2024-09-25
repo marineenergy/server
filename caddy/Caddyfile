@@ -14,7 +14,6 @@
 {
   # note: CLOUDFLARE_API_TOKEN value set in .env file
 	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-	resolvers 1.1.1.1
 }
 
 (cloudflare) {
