@@ -13,11 +13,15 @@ services:
 
   caddy:
     container_name: caddy
-    image: caddy:latest
+    #image: caddy:latest
+    build: ./caddy
+    #image: bdbest/caddy:latest-cloudflare
     ports:
       - 80:80
       - 443:443
     restart: unless-stopped
+    environment:
+      - CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - /share:/share
