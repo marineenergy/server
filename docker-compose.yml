@@ -21,11 +21,10 @@ services:
 
   plumber:
     container_name: plumber
-    #image: plumber:latest
     build: ./plumber
     ports:
       - 8000:8000
-    #restart: unless-stopped # TODO: once plumber working, uncomment
+    restart: unless-stopped
     volumes:
       - /share:/share
     depends_on:
