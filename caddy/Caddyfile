@@ -8,12 +8,14 @@
 #   * [x] shiny.
 #   * [x] www.
 #   * [x] www-dev.
+# - Switch to [DNS | Records | marineenergy.app | bdbest@gmail.com's Account | Cloudflare](https://dash.cloudflare.com/10dd4c59f6624f7b9ee0e25385b1e930/marineenergy.app/dns/records?recordsSort=desc%3Acontent)
+
+# globally https://github.com/caddy-dns/google-domains?tab=readme-ov-file#config-examples
+{
+	acme_dns google_domains <access_token>
+}
 
 api.marineenergy.org {
-  tls {
-    resolvers 8.8.8.8 8.8.4.4
-  }
-
 	reverse_proxy rstudio:8888
 }
 
