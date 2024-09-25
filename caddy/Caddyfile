@@ -57,6 +57,10 @@ marineenergy.org {
 }
 
 www-dev.marineenergy.org {
+  tls {
+    resolvers 8.8.8.8 8.8.4.4
+  }
+
 	root * /share/github/www_dev
  	file_server browse {
 	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
