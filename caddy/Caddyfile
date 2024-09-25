@@ -10,9 +10,9 @@
 #   * [x] www-dev.
 # - Switch to [DNS | Records | marineenergy.app | bdbest@gmail.com's Account | Cloudflare](https://dash.cloudflare.com/10dd4c59f6624f7b9ee0e25385b1e930/marineenergy.app/dns/records?recordsSort=desc%3Acontent)
 
-# globally https://github.com/caddy-dns/google-domains?tab=readme-ov-file#config-examples
+# globally https://caddyserver.com/docs/caddyfile/options#acme-dns
 {
-	acme_dns google_domains <access_token>
+	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 }
 
 api.marineenergy.org {
@@ -40,36 +40,26 @@ shiny.marineenergy.app {
 }
 
 www.marineenergy.org {
-  tls {
+  #tls {
       # fix: [ACME DNS challenge fails...](https://caddy.community/t/acme-dns-challenge-fails-after-cname-ns-internal-redirection/20288/5)
       #   - https://caddyserver.com/docs/caddyfile/directives/tls#resolvers
       #     use [Google Public DNS](https://developers.google.com/speed/public-dns)
-      resolvers 8.8.8.8 8.8.4.4
-    }
+   #   resolvers 8.8.8.8 8.8.4.4
+   #}
 
   redir https://{labels.1}.{labels.0}{uri}
 }
 
 marineenergy.org {
-  tls {
-    resolvers 8.8.8.8 8.8.4.4
-  }
-
 	root * /share/github/www
  	file_server browse {
-	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
 	  precompressed zstd br gzip
   }
 }
 
 www-dev.marineenergy.org {
-  tls {
-    resolvers 8.8.8.8 8.8.4.4
-  }
-
 	root * /share/github/www_dev
  	file_server browse {
-	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
 	  precompressed zstd br gzip
   }
 }
