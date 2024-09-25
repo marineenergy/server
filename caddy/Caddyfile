@@ -10,6 +10,10 @@
 #   * [x] www-dev.
 
 api.marineenergy.org {
+  tls {
+    resolvers 8.8.8.8 8.8.4.4
+  }
+
 	reverse_proxy rstudio:8888
 }
 
