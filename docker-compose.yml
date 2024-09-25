@@ -1,50 +1,63 @@
 version: '3.3'
 
 volumes:
-  nginx-certs:
-  nginx-vhost:
+  # nginx-certs:
+  # nginx-vhost:
   #nginx-html:
   postgis-data:
   #postgis-backups:
-  geoserver-data:
+  # geoserver-data:
   shiny-apps:
 
 services:
 
-  proxy:
-    container_name: proxy
-    image: jwilder/nginx-proxy
-    env_file: .env
-    environment:
-      DEFAULT_HOST: www.$HOST
-      VIRTUAL_HOST_SPECIFIC_PORT: 'true'
-    volumes:
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
-      - "./nginx-proxy/nginx.tmpl:/app/nginx.tmpl:ro"
-      - "nginx-certs:/etc/nginx/certs:ro"
-      - "nginx-vhost:/etc/nginx/vhost.d"
-      - "/share/github/www:/usr/share/nginx/html"
-    restart: always
+  caddy:
+    container_name: caddy
+    image: caddy:latest
     ports:
       - 80:80
       - 443:443
-    depends_on:
-      - nginx
-
-  letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    restart: always
-    container_name: letsencrypt
-    environment:
-      DEFAULT_EMAIL: 'ben@ecoquants.com'
-      NGINX_PROXY_CONTAINER: proxy
+    restart: unless-stopped
     volumes:
-     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-     - "nginx-certs:/etc/nginx/certs:rw"
-     - "nginx-vhost:/etc/nginx/vhost.d"
-     - "/share/github/www:/usr/share/nginx/html"
-    depends_on: 
-     - proxy
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /share:/share
+      - /share/caddy/data:/data
+      - /share/caddy/config:/config
+
+  # proxy:
+  #   container_name: proxy
+  #   image: jwilder/nginx-proxy
+  #   env_file: .env
+  #   environment:
+  #     DEFAULT_HOST: www.$HOST
+  #     VIRTUAL_HOST_SPECIFIC_PORT: 'true'
+  #   volumes:
+  #     - "/var/run/docker.sock:/tmp/docker.sock:ro"
+  #     - "./nginx-proxy/nginx.tmpl:/app/nginx.tmpl:ro"
+  #     - "nginx-certs:/etc/nginx/certs:ro"
+  #     - "nginx-vhost:/etc/nginx/vhost.d"
+  #     - "/share/github/www:/usr/share/nginx/html"
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   depends_on:
+  #     - nginx
+
+  # letsencrypt:
+  #   image: jrcs/letsencrypt-nginx-proxy-companion
+  #   restart: always
+  #   container_name: letsencrypt
+  #   environment:
+  #     DEFAULT_EMAIL: 'ben@ecoquants.com'
+  #     NGINX_PROXY_CONTAINER: proxy
+  #   volumes:
+  #    - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  #    - "nginx-certs:/etc/nginx/certs:rw"
+  #    - "nginx-vhost:/etc/nginx/vhost.d"
+  #    - "/share/github/www:/usr/share/nginx/html"
+  #   depends_on: 
+  #    - proxy
      
   postgis:
     container_name: postgis
@@ -114,42 +127,42 @@ services:
     restart: always
     environment:
       # [Running virtual hosts on different ports of the same container · Issue #560 · jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy/issues/560)
-      VIRTUAL_HOST: "rstudio.$HOST:8787,shiny.$HOST:3838,api.$HOST:8888"
-      LETSENCRYPT_HOST: "rstudio.$HOST,shiny.$HOST,api.$HOST"
+      # VIRTUAL_HOST: "rstudio.$HOST:8787,shiny.$HOST:3838,api.$HOST:8888"
+      # LETSENCRYPT_HOST: "rstudio.$HOST,shiny.$HOST,api.$HOST"
       ROOT: 'true'
       USER: admin
       PASSWORD: $PASSWORD
     ports:
       - 8787:8787
       - 3838:3838
-      - 8888:8888
+      - 8888:8888 # TODO: add api as seperate container
 
-  nginx:
-    container_name: nginx
-    build: ./nginx
-    volumes:
-      - /share:/share    
-      - /share/github/www:/usr/share/nginx/html
-    restart: always
-    environment:
-      VIRTUAL_HOST: www.$HOST
-      LETSENCRYPT_HOST: $HOST,www.$HOST
-      LETSENCRYPT_EMAIL: ben@ecoquants.com
-    ports:
-      - 8088:80
+  # nginx:
+  #   container_name: nginx
+  #   build: ./nginx
+  #   volumes:
+  #     - /share:/share    
+  #     - /share/github/www:/usr/share/nginx/html
+  #   restart: always
+  #   environment:
+  #     VIRTUAL_HOST: www.$HOST
+  #     LETSENCRYPT_HOST: $HOST,www.$HOST
+  #     LETSENCRYPT_EMAIL: ben@ecoquants.com
+  #   ports:
+  #     - 8088:80
   
-  nginx-dev:
-    container_name: nginx-dev
-    build: ./nginx
-    volumes:
-      - /share:/share    
-      - /share/github/www_dev:/usr/share/nginx/html
-    restart: always
-    environment:
-      VIRTUAL_HOST: www-dev.$HOST
-      LETSENCRYPT_HOST: www-dev.$HOST
-      LETSENCRYPT_EMAIL: ben@ecoquants.com
-    ports:
-      - 8089:80
+  # nginx-dev:
+  #   container_name: nginx-dev
+  #   build: ./nginx
+  #   volumes:
+  #     - /share:/share    
+  #     - /share/github/www_dev:/usr/share/nginx/html
+  #   restart: always
+  #   environment:
+  #     VIRTUAL_HOST: www-dev.$HOST
+  #     LETSENCRYPT_HOST: www-dev.$HOST
+  #     LETSENCRYPT_EMAIL: ben@ecoquants.com
+  #   ports:
+  #     - 8089:80
 
   

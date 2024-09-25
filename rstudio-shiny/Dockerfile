@@ -1,5 +1,5 @@
 FROM rocker/geospatial:4.4.1
-MAINTAINER "Ben Best" ben@ecoquants.com
+LABEL org.opencontainers.image.authors="ben@ecoquants.com"
 
 RUN /rocker_scripts/install_shiny_server.sh
 RUN /rocker_scripts/install_python.sh

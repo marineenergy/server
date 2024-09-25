@@ -1,0 +1,54 @@
+# caddy fmt --overwrite Caddyfile
+
+# marineenergy.app ----
+# - [DNS](https://account.squarespace.com/domains/managed/marineenergy.app/dns/dns-settings) as ben@ecoquants.com
+#   * [x] api.
+#   * [ ] geo.
+#   * [x] rstudio.
+#   * [x] shiny.
+#   * [x] www.
+#   * [x] www-dev.
+
+api.marineenergy.org {
+	reverse_proxy rstudio:8888
+}
+
+# file.marineenergy.app {
+# 	root * /share/public
+# 	file_server browse {
+# 	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
+# 	  precompressed zstd br gzip
+#   }
+# }
+
+# pgadmin.marineenergy.app {
+# 	reverse_proxy pgadmin:8088
+# }
+
+rstudio.marineenergy.app {
+	reverse_proxy rstudio:8787
+}
+
+shiny.marineenergy.app {
+	reverse_proxy rstudio:3838
+}
+
+www.marineenergy.org {
+  redir https://{labels.1}.{labels.0}{uri}
+}
+
+marineenergy.org {
+	root * /share/github/www
+ 	file_server browse {
+	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
+	  precompressed zstd br gzip
+  }
+}
+
+www-dev.marineenergy.org {
+	root * /share/github/www_dev
+ 	file_server browse {
+	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
+	  precompressed zstd br gzip
+  }
+}

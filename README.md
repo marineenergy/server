@@ -356,6 +356,53 @@ docker-compose restart
 docker-compose stop
 ```
 
+## update docker compose images
+
+bbest @ 2024-09-25
+
+- e.g., update: [for Quarto upgrade to rocker/geospatial:4.4.1 (from 4.1.1) · marineenergy/server@2d089b5](https://github.com/marineenergy/server/commit/2d089b551e74628f5db9733bef0993ffdbe9db12)
+- how: [How to update existing images with docker-compose? - Stack Overflow](https://stackoverflow.com/questions/49316462/how-to-update-existing-images-with-docker-compose)
+
+```bash
+docker compose pull
+
+# to force rebuilding all
+docker compose up --force-recreate --build -d
+# OR to individually rebuild
+docker compose build rstudio
+
+docker compose up -d
+docker compose up --remove-orphans -d
+docker image prune -f
+```
+
+### LOGS
+
+```bash
+docker compose pull
+```
+
+```
+[+] Pulling 2/7
+ ✔ nginx Skipped - No image to be pulled                                                                                                 0.0s 
+ ✔ nginx-dev Skipped - No image to be pulled                                                                                             0.0s 
+ ⠋ letsencrypt Pulling                                                                                                                   0.1s 
+ ⠋ postgis Pulling                                                                                                                       0.1s 
+ ⠋ rstudio Pulling                                                                                                                       0.1s 
+ ⠋ proxy Pulling                                                                                                                         0.1s 
+ ⠋ postgis-backup Pulling                                                                                                                0.1s 
+WARNING: Some service image(s) must be built from source by running:
+    docker compose build rstudio
+error getting credentials - err: exit status 1, out: `GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.secrets was not provided by any .service files`
+```
+
+FIX, per - [docker build regression: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.secrets was not provided by any .service files · Issue #1078 · moby/buildkit](https://github.com/moby/buildkit/issues/1078#issuecomment-577450070)
+
+```bash
+sudo apt install gnome-keyring
+```
+
+
 ## marineenergy.app manual post-docker install steps
 
 TODO: fold into `docker-compose.yml`
