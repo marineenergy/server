@@ -370,6 +370,7 @@ docker compose pull
 docker compose up --force-recreate --build -d
 # OR to individually rebuild
 docker compose build rstudio
+docker compose up --build caddy
 
 # to remove orphan containers
 docker compose up --remove-orphans -d

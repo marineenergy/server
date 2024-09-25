@@ -9,13 +9,6 @@
 #   * [x] www.
 #   * [x] www-dev.
 
-tls {
-  # fix: [ACME DNS challenge fails...](https://caddy.community/t/acme-dns-challenge-fails-after-cname-ns-internal-redirection/20288/5)
-  #   - https://caddyserver.com/docs/caddyfile/directives/tls#resolvers
-  #     use [Google Public DNS](https://developers.google.com/speed/public-dns)
-  resolvers 8.8.8.8 8.8.4.4
-}
-
 api.marineenergy.org {
 	reverse_proxy rstudio:8888
 }
@@ -41,10 +34,21 @@ shiny.marineenergy.app {
 }
 
 www.marineenergy.org {
+  tls {
+      # fix: [ACME DNS challenge fails...](https://caddy.community/t/acme-dns-challenge-fails-after-cname-ns-internal-redirection/20288/5)
+      #   - https://caddyserver.com/docs/caddyfile/directives/tls#resolvers
+      #     use [Google Public DNS](https://developers.google.com/speed/public-dns)
+      resolvers 8.8.8.8 8.8.4.4
+    }
+
   redir https://{labels.1}.{labels.0}{uri}
 }
 
 marineenergy.org {
+  tls {
+    resolvers 8.8.8.8 8.8.4.4
+  }
+
 	root * /share/github/www
  	file_server browse {
 	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
