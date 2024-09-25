@@ -12,7 +12,16 @@
 
 # globally https://caddyserver.com/docs/caddyfile/options#acme-dns
 {
+  # note: CLOUDFLARE_API_TOKEN value set in .env file
 	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	resolvers 1.1.1.1
+}
+
+(cloudflare) {
+  tls {
+    dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    resolvers 1.1.1.1
+  }
 }
 
 marineenergy.org {
@@ -20,16 +29,12 @@ marineenergy.org {
  	file_server browse {
 	  precompressed zstd br gzip
   }
-  tls {
-	  dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-  }
+  import cloudflare
 }
 
 api.marineenergy.org {
 	reverse_proxy rstudio:8888
-	tls {
-	  dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-  }
+	import cloudflare
 }
 
 # file.marineenergy.app {
@@ -46,10 +51,12 @@ api.marineenergy.org {
 
 rstudio.marineenergy.app {
 	reverse_proxy rstudio:8787
+	import cloudflare
 }
 
 shiny.marineenergy.app {
 	reverse_proxy rstudio:3838
+	import cloudflare
 }
 
 www.marineenergy.org {
@@ -61,6 +68,7 @@ www.marineenergy.org {
    #}
 
   redir https://{labels.1}.{labels.0}{uri}
+  import cloudflare
 }
 
 www-dev.marineenergy.org {
@@ -68,4 +76,5 @@ www-dev.marineenergy.org {
  	file_server browse {
 	  precompressed zstd br gzip
   }
+  import cloudflare
 }
