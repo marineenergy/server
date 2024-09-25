@@ -2,9 +2,9 @@
 FROM rstudio/plumber
 LABEL org.opencontainers.image.authors="Docker User <docker@user.org>"
 
-RUN R -e "install.packages( \
+RUN R -e "install.packages(c( \
   'dbplyr','dplyr','digest','fs','glue','here','httr','jsonlite','librarian', \
-  'pool','purrr','rmarkdown','readr','shiny','stringr','tibble','tidyr','yaml')"
+  'pool','purrr','rmarkdown','readr','shiny','stringr','tibble','tidyr','yaml'))"
 
 CMD ["/share/github/api/run-api.R"]
 
