@@ -371,8 +371,11 @@ docker compose up --force-recreate --build -d
 # OR to individually rebuild
 docker compose build rstudio
 
-docker compose up -d
+# to remove orphan containers
 docker compose up --remove-orphans -d
+# to start all daemons
+docker compose up -d
+
 docker image prune -f
 ```
 

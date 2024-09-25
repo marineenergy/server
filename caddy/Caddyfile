@@ -9,6 +9,13 @@
 #   * [x] www.
 #   * [x] www-dev.
 
+tls {
+  # fix: [ACME DNS challenge fails...](https://caddy.community/t/acme-dns-challenge-fails-after-cname-ns-internal-redirection/20288/5)
+  #   - https://caddyserver.com/docs/caddyfile/directives/tls#resolvers
+  #     use [Google Public DNS](https://developers.google.com/speed/public-dns)
+  resolvers 8.8.8.8 8.8.4.4
+}
+
 api.marineenergy.org {
 	reverse_proxy rstudio:8888
 }
