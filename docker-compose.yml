@@ -28,6 +28,16 @@ services:
       - /share/caddy/data:/data
       - /share/caddy/config:/config
 
+  plumber:
+    container_name: plumber
+    #image: plumber:latest
+    build: ./plumber
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+    volumes:
+      - /share:/share
+
   # proxy:
   #   container_name: proxy
   #   image: jwilder/nginx-proxy
@@ -139,7 +149,7 @@ services:
     ports:
       - 8787:8787
       - 3838:3838
-      - 8888:8888 # TODO: add api as seperate container
+      #- 8888:8888 # TODO: add api as seperate container
 
   # nginx:
   #   container_name: nginx
