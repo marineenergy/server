@@ -13,9 +13,7 @@ services:
 
   caddy:
     container_name: caddy
-    #image: caddy:latest
-    build: ./caddy
-    image: bdbest/caddy:latest-cloudflare
+    image: caddy:latest
     ports:
       - 80:80
       - 443:443
