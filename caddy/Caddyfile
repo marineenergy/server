@@ -15,12 +15,21 @@
 	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 }
 
-api.marineenergy.org {
-  tls {
-    resolvers 8.8.8.8 8.8.4.4
+marineenergy.org {
+	root * /share/github/www
+ 	file_server browse {
+	  precompressed zstd br gzip
   }
+  tls {
+	  dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+  }
+}
 
+api.marineenergy.org {
 	reverse_proxy rstudio:8888
+	tls {
+	  dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+  }
 }
 
 # file.marineenergy.app {
@@ -52,13 +61,6 @@ www.marineenergy.org {
    #}
 
   redir https://{labels.1}.{labels.0}{uri}
-}
-
-marineenergy.org {
-	root * /share/github/www
- 	file_server browse {
-	  precompressed zstd br gzip
-  }
 }
 
 www-dev.marineenergy.org {
