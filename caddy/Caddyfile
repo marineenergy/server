@@ -28,18 +28,17 @@ marineenergy.org {
  	file_server browse {
 	  precompressed zstd br gzip
   }
-  import cloudflare
+  #import cloudflare
 }
 
 api.marineenergy.org {
 	reverse_proxy rstudio:8888
-	import cloudflare
+	#import cloudflare
 }
 
 # file.marineenergy.app {
 # 	root * /share/public
 # 	file_server browse {
-# 	  # serve *.zst, *.br or *.gz if file exists and client supports precompressed files
 # 	  precompressed zstd br gzip
 #   }
 # }
@@ -50,12 +49,12 @@ api.marineenergy.org {
 
 rstudio.marineenergy.app {
 	reverse_proxy rstudio:8787
-	import cloudflare
+	#import cloudflare
 }
 
 shiny.marineenergy.app {
 	reverse_proxy rstudio:3838
-	import cloudflare
+	#import cloudflare
 }
 
 www.marineenergy.org {
@@ -67,7 +66,7 @@ www.marineenergy.org {
    #}
 
   redir https://{labels.1}.{labels.0}{uri}
-  import cloudflare
+  #import cloudflare
 }
 
 www-dev.marineenergy.org {
@@ -75,5 +74,5 @@ www-dev.marineenergy.org {
  	file_server browse {
 	  precompressed zstd br gzip
   }
-  import cloudflare
+  #import cloudflare
 }
