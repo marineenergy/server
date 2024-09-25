@@ -363,6 +363,19 @@ bbest @ 2024-09-25
 - e.g., update: [for Quarto upgrade to rocker/geospatial:4.4.1 (from 4.1.1) · marineenergy/server@2d089b5](https://github.com/marineenergy/server/commit/2d089b551e74628f5db9733bef0993ffdbe9db12)
 - how: [How to update existing images with docker-compose? - Stack Overflow](https://stackoverflow.com/questions/49316462/how-to-update-existing-images-with-docker-compose)
 
+```
+# caddy fmt --overwrite Caddyfile
+
+# marineenergy.app ----
+# - [DNS](https://account.squarespace.com/domains/managed/marineenergy.app/dns/dns-settings) as ben@ecoquants.com
+#   * @         A      206.189.173.168
+#   * api       A      206.189.173.168
+#   * rstudio   A      206.189.173.168
+#   * shiny     A      206.189.173.168
+#   * www       CNAME  marineenergy.app
+#   * www-dev   A      206.189.173.168
+```
+
 ```bash
 docker compose pull
 

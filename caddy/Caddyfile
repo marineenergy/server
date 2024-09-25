@@ -1,78 +1,25 @@
-# caddy fmt --overwrite Caddyfile
-
-# marineenergy.app ----
-# - [DNS](https://account.squarespace.com/domains/managed/marineenergy.app/dns/dns-settings) as ben@ecoquants.com
-#   * [x] api.
-#   * [ ] geo.
-#   * [x] rstudio.
-#   * [x] shiny.
-#   * [x] www.
-#   * [x] www-dev.
-# - Switch to [DNS | Records | marineenergy.app | bdbest@gmail.com's Account | Cloudflare](https://dash.cloudflare.com/10dd4c59f6624f7b9ee0e25385b1e930/marineenergy.app/dns/records?recordsSort=desc%3Acontent)
-
-# globally https://caddyserver.com/docs/caddyfile/options#acme-dns
-#{
-  # note: CLOUDFLARE_API_TOKEN value set in .env file
-	#acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-#}
-
-#(cloudflare) {
-#  tls {
-#    dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-#    resolvers 1.1.1.1
-#  }
-#}
-
-marineenergy.org {
+marineenergy.app {
 	root * /share/github/www
  	file_server browse {
 	  precompressed zstd br gzip
   }
-  #import cloudflare
 }
 
-api.marineenergy.org {
-	reverse_proxy rstudio:8888
-	#import cloudflare
-}
-
-# file.marineenergy.app {
-# 	root * /share/public
-# 	file_server browse {
-# 	  precompressed zstd br gzip
-#   }
-# }
-
-# pgadmin.marineenergy.app {
-# 	reverse_proxy pgadmin:8088
-# }
-
-rstudio.marineenergy.app {
-	reverse_proxy rstudio:8787
-	#import cloudflare
-}
-
-shiny.marineenergy.app {
-	reverse_proxy rstudio:3838
-	#import cloudflare
-}
-
-www.marineenergy.org {
-  #tls {
-      # fix: [ACME DNS challenge fails...](https://caddy.community/t/acme-dns-challenge-fails-after-cname-ns-internal-redirection/20288/5)
-      #   - https://caddyserver.com/docs/caddyfile/directives/tls#resolvers
-      #     use [Google Public DNS](https://developers.google.com/speed/public-dns)
-   #   resolvers 8.8.8.8 8.8.4.4
-   #}
-
-  redir https://{labels.1}.{labels.0}{uri}
-  #import cloudflare
-}
-
-www-dev.marineenergy.org {
+www-dev.marineenergy.app {
 	root * /share/github/www_dev
  	file_server browse {
 	  precompressed zstd br gzip
   }
-  #import cloudflare
+}
+
+api.marineenergy.app {
+	reverse_proxy rstudio:8888
+}
+
+rstudio.marineenergy.app {
+	reverse_proxy rstudio:8787
+}
+
+shiny.marineenergy.app {
+	reverse_proxy rstudio:3838
 }
