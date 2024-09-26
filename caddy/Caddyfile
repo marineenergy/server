@@ -5,13 +5,6 @@ marineenergy.app {
   }
 }
 
-www-dev.marineenergy.app {
-	root * /share/github/www_dev
- 	file_server browse {
-	  precompressed zstd br gzip
-  }
-}
-
 api.marineenergy.app {
 	reverse_proxy plumber:8000
 }
@@ -22,4 +15,15 @@ rstudio.marineenergy.app {
 
 shiny.marineenergy.app {
 	reverse_proxy rstudio:3838
+}
+
+www.marineenergy.app {
+  redir https://{labels.1}.{labels.0}{uri}
+}
+
+www-dev.marineenergy.app {
+	root * /share/github/www_dev
+ 	file_server browse {
+	  precompressed zstd br gzip
+  }
 }
