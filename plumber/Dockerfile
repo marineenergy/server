@@ -10,8 +10,9 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 
 # install R packages on CRAN; `rm` call removes install2.r's cache
 RUN install2.r --error \
- dbplyr dplyr digest fs glue here httr jsonlite librarian plumber pool purrr \
- rmarkdown RPostgres readr shiny stringr tibble tidyr yaml \
+ dbplyr dplyr digest DT fs glue here httr jsonlite librarian markdown \
+ plumber pool purrr rmarkdown RPostgres plotly readr shiny stringr tibble tidyr \
+ yaml \
  && rm -rf /tmp/downloaded_packages
 
 # install R packages on Github 
