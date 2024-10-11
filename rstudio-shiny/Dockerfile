@@ -16,6 +16,18 @@ RUN install2.r --error \
 RUN installGithub.r \
   r-lib/gargle \
   MarkEdmondson1234/googleAuthR \
-  RinteRface/shinydashboardPlus
+  RinteRface/shinydashboardPlus \
+  bbest/DTedit
+  
+# requirements for /share/github/ba/tag_excerpt_gpt.py
+RUN pip install --upgrade \
+  pandas \
+  python-dotenv \
+  google-auth \
+  google-api-python-client \
+  google-auth-httplib2 \
+  google-auth-oauthlib \
+  openai \
+  tiktoken
   
 CMD ["/init"]
