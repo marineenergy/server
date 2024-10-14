@@ -1,5 +1,6 @@
 # https://www.rplumber.io/articles/hosting.html#docker:~:text=FROM%20rstudio/plumber
 # https://github.com/rstudio/plumber/blob/main/Dockerfile
+# https://github.com/rocker-org/rocker-versioned2/blob/master/dockerfiles/geospatial_4.4.1.Dockerfile
 FROM rocker/geospatial:4.4.1
 
 # install system dependencies
